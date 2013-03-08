@@ -9,6 +9,7 @@
     "JSONStream": "~0.4.3",
     "jsonparse": "0.0.4",
     "clarinet": "~0.7.1",
-    "request": "~2.14.0"
+    "request": "~2.14.0",
+    "event-stream": "~3.0.11"
   }
 }
