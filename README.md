@@ -1,0 +1,1 @@
+this repo demos a subtle utf8 bug I found in 2 popular nodejs streaming json parsers.
