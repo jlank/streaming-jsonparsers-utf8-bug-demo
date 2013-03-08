@@ -1,0 +1,14 @@
+{
+  "name": "streaming-jsonparsers-utf8-bug-demo",
+  "version": "0.0.0",
+  "description": "repo to demo a bug I found with streaming json parsers in nodejs (jsonparse and clarinet)",
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "JSONStream": "~0.4.3",
+    "jsonparse": "0.0.4",
+    "clarinet": "~0.7.1",
+    "request": "~2.14.0"
+  }
+}
