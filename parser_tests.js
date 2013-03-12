@@ -5,6 +5,8 @@
  */
 
 var Parser = require('jsonparse'),
+    Parser_patched = require('./node_modules_patched/jsonparse/jsonparse'),
+    clarinet = require('clarinet'),
     json_string = '{"id":"a5cbbefae3eab6beb3e161db9305dd00","key":["multibyteutf8json"],"value":{"russian_text":"А, Б, В, Г, Д, Е, Ё, Ж, З, И, Й, К, Л, М, Н, О, П, Р, С, Т, У, Ф, Х, Ц, Ч, Ш, Щ, Ъ, Ы, Ь, Э, Ю, Я"}}',
     stream = undefined,
     buffer = new Buffer(json_string),
@@ -19,11 +21,23 @@ if (!args[0]) {
 
 console.log('testing ' + args[0] + '\'s ability to handle multibyte utf8 characters split before boundary');
 console.log('**************************************************************************************\n');
-console.log('full buffer:')
+
+process.stdout.write('\033[31m');
+process.stdout.write('full buffer:');
+process.stdout.write('\033[0m\n');
 console.log(buffer.toString())
-console.log('\nsimulated stream chunk1: ')
+
+console.log('\n');
+process.stdout.write('\033[31m');
+process.stdout.write('simulated stream chunk1:');
+process.stdout.write('\033[0m\n');
 console.log(chunk1.toString())
-console.log('\nsimulated stream chunk2: ')
+
+
+console.log('\n');
+process.stdout.write('\033[31m');
+process.stdout.write('simulated stream chunk2:');
+process.stdout.write('\033[0m\n');
 console.log(chunk2.toString())
 
 
@@ -33,23 +47,36 @@ if (args[0] === 'jsonparse') {
     console.log(value);
   };
 }
+if (args[0] === 'jsonparse-patched') {
+  stream = new Parser_patched();
+  stream.onValue = function (value) {
+    console.log(value);
+  };
+}
+
 if (args[0] === 'clarinet') {
-  stream = require("clarinet").createStream();
-  stream.on("value", function (node) {
+  stream = clarinet.createStream();
+  stream.on('value', function (node) {
     console.log(node);
   });
 }
 
 if (stream) {
-  console.log('---------\n');
-  console.log('write full buffer to ' + args[0] + ':');
+  console.log('\n');
+  process.stdout.write('\033[34m');
+  process.stdout.write('write full buffer to ' + args[0] + ':\n');
+  process.stdout.write('\033[0m');
   stream.write(buffer);
 
-  console.log('---------\n');
-  console.log('write chunk1 to ' + args[0] +':');
+  console.log('\n');
+  process.stdout.write('\033[34m');
+  process.stdout.write('write chunk1 to ' + args[0] +':\n');
+  process.stdout.write('\033[0m');
   stream.write(chunk1);
 
-  console.log('---------\n');
-  console.log('write chunk2 to ' + args[0] + ':');
+  console.log('\n');
+  process.stdout.write('\033[34m');
+  process.stdout.write('write chunk2 to ' + args[0] + ':\n');
+  process.stdout.write('\033[0m');
   stream.write(chunk2);
 }

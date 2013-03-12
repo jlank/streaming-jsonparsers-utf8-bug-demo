@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
   var params = require('url').parse(req.url);
   var iterations = require('querystring').parse(params.query).iterations || undefined;
 
-  res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8'});
+  res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8', 'Transfer-Encoding': 'chunked' });
   res.write('{"total_rows":"' + (iterations || 1) + '","offset":0,"rows":[\n');
   if (iterations) {
     for (var i = 0; i < iterations; i++) {
