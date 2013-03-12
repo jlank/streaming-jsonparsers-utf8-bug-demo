@@ -23,9 +23,10 @@ and returns 40k rows.
 * The third client invocation does the same thing but with an `http` stream returned from the mikea/request module.
 * The fourth client invocation does the same thing but with an `http` stream returned from the mikea/request module with my tiny patch
 
-In both cases, the stream chunks at some point buffer slightly, and cause a json object to be partially sent,
-if this occurs on a utf8 character with multiple bytes (they can have up to 4), you will soon see a � character
-and an error will print to the screen.  It isn't always exact so if you don't see it on the first run, try again.
+In the case that you don't specify an encoding, the stream chunks at some random point in the buffer,
+and cause a json object to be chunked in the middle of a string, if this occurs on a utf8 character with
+multiple bytes (they can have up to 4), in this demo you will see a � character
+and an error will print to the screen.  It isn't always exact or consistent so if you don't see it on the first run, try again.
 
 The client/server demo replicates what I was experiencing, if you want to just test the bug directly
 by chopping up a buffer and writing it to each parser, run `parser_tests.js`
@@ -57,7 +58,6 @@ It turned out to be [jsonparse](https://github.com/creationix/jsonparse) by the 
 use my new found knowledge to identify the same issue in [@dscape](http://twitter.com/dscape)'s [clarinet](https://github.com/dscape/clarinet) module.
 This bug may be lurking in other streaming json modules too, so if you know of one, let me know or check it out yourself.
 
-This repo is part of a blog post I wrote up on the issue, if you want the full scoop, go read it: http://jlank.com/...not done
 
 ## Fix it
 
@@ -67,6 +67,10 @@ if a character is multi-byte, and reconstruct the full characters across `stream
 calling `.toString()`; aka when they should _actually_ be converted to a string by the parser.
 I wrote pull requests for both of these modules to fix this, I know streams2 just landed so maybe
 there is a better way to leverage the read() method to pull smaller chunks.
+
+Additionally for mikeal/request I propose the ability to specify the encoding of a request, even if it is being
+streamed.  IMO if a developer specifies the encoding of a stream, the onus is on them to make sure every
+pipe downstream handles the buffer or string correctly, since they made a deliberate (and necessary choice) to do so.
 
 In summation, I'm guiding my fix based on the Unix Philosophy (Rule of Repair)[http://www.faqs.org/docs/artu/ch01s06.html#id2878538]
 > Postel's Prescription:[10] “Be liberal in what you accept, and conservative in what you send”.
@@ -78,4 +82,6 @@ In my case, I found a small bug that "quietly cause[d] corruption that [didn't] 
 the fix is to be cognizant of the potential breakage at the source of a stream, and for anyone handling it downstream.
 
 ## TODO
+This repo is part of a blog post I wrote up on the issue, if you want the full scoop, go read it: http://jlank.com/...not done
+
 I also (want to write) a module to do this automatically so it can be a drop in to a module if someone needed it...
