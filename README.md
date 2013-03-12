@@ -55,7 +55,7 @@ At this point, I began investigating...  was it my script? was it nano? was it r
 
 It turned out to be [jsonparse](https://github.com/creationix/jsonparse) by the talented [@creationix](http://twitter.com/creationix)
 (which JSONStream depends on). This discovery lead me on a little journey to fix a bug, learn more about utf8, and afterwards,
-use my new found knowledge to identify the same issue in [@dscape](http://twitter.com/dscape)'s [clarinet](https://github.com/dscape/clarinet) module.
+use my newfound knowledge to identify the same issue in [@dscape](http://twitter.com/dscape)'s [clarinet](https://github.com/dscape/clarinet) module.
 This bug may be lurking in other streaming json modules too, so if you know of one, let me know or check it out yourself.
 
 
